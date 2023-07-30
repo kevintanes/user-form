@@ -1,10 +1,11 @@
+import Button from "@/components/Button";
+import ModalSaveEdit from "@/components/ModalSaveEdit";
 import { db } from "@/firebase";
-import { Box, Button, Container, Stack, TextField } from "@mui/material";
+import { Box, Container, Stack, TextField } from "@mui/material";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useUpdateData } from "../../hooks/useData";
 import { User } from "../../types";
 
 interface GetServerSideProps {
@@ -15,7 +16,10 @@ export default function EditUser(props: GetServerSideProps) {
   const router = useRouter();
 
   const { user } = props;
-  const { updateUser } = useUpdateData();
+
+  const [modalEdit, setModalEdit] = useState(false);
+  const openModalEdit = () => setModalEdit(true);
+  const closeModalEdit = () => setModalEdit(false);
 
   const printUser = () => {
     return user.map((val: User) => {
@@ -71,10 +75,7 @@ export default function EditUser(props: GetServerSideProps) {
     });
   };
 
-  const btnSave = () => {
-    updateUser(user[0].id, username, email, phone, address);
-    router.push("/")
-  };
+  const [userId, setUserId] = useState(user[0].id);
   const [username, setUsername] = useState(user[0].username);
   const [email, setEmail] = useState(user[0].email);
   const [phone, setPhone] = useState(user[0].phone);
@@ -95,16 +96,13 @@ export default function EditUser(props: GetServerSideProps) {
           bgcolor: "whitesmoke",
         }}
       >
-        <Button onClick={() => router.push("/")} variant="text" color="warning">
-          Back To Home
-        </Button>
+        <Button variant="text" type="button" color="warning" onClick={() => router.push("/")} title="Back to Home" />
         {printUser()}
-        <Box display="flex" justifyContent="flex-end">
-          <Button type="submit" sx={{ mt: 2 }} variant="contained" onClick={() => btnSave()}>
-            Save
-          </Button>
+        <Box display="flex" justifyContent="flex-end" sx={{ mt: 2 }}>
+          <Button title="Save" type="submit" variant="contained" onClick={() => openModalEdit()} />
         </Box>
       </Container >
+      <ModalSaveEdit modalEdit={modalEdit} closeModalEdit={closeModalEdit} userId={userId} username={username} email={email} phone={phone} address={address} />
     </>
   );
 }

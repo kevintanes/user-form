@@ -25,7 +25,7 @@ const ModalDelete: React.FC<ModalDeleteProps> = (props) => {
       <DialogTitle>Delete User - {props.username}</DialogTitle>
       <DialogContent>Are you sure want to delete this user?</DialogContent>
       <DialogActions>
-        <Button variant="text" onClick={props.closeModalDelete} title="Cancel" color="primary" />
+        <Button variant="text" onClick={props.closeModalDelete} title="Cancel" color="warning" />
         <Button variant="text" onClick={btnDelete} title="Delete" color="error" />
       </DialogActions>
     </Dialog>

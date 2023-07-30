@@ -3,7 +3,7 @@ import React from "react";
 
 interface ButtonProps {
   title?: string;
-  color?: "info" | "primary" | "error";
+  color?: "info" | "primary" | "error" | "warning";
   onClick?: () => void;
   variant?: "contained" | "outlined" | "text";
   type?: "button" | "submit" | "reset"

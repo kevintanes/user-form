@@ -2,7 +2,7 @@ import Button from "@/components/Button";
 import ModalDelete from "@/components/ModalDelete";
 import ModalForm from "@/components/ModalForm";
 import { db } from "@/firebase";
-import { Box, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Box, Container, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { collection, getDocs } from "firebase/firestore";
 import { Inter } from "next/font/google";
 import Head from "next/head";
@@ -31,6 +31,11 @@ export default function Home(props: GetServerSideProps) {
   const [modalDelete, setModalDelete] = useState(false);
   const openModalDelete = () => setModalDelete(true);
   const closeModalDelete = () => setModalDelete(false);
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  setTimeout(() => {
+    setIsLoading(false)
+  }, 1000);
 
   const printUserData = () => {
     return users.map((val: User, idx) => {
@@ -72,20 +77,30 @@ export default function Home(props: GetServerSideProps) {
           py: 2,
           bgcolor: "whitesmoke",
         }}>
-        <Button title="add new user" color="info" onClick={openModalAdd} variant="contained" />
-        <TableContainer component={Paper} sx={{ my: 2 }}>
-          <Table aria-label="User Table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">#</TableCell>
-                <TableCell align="center">Username</TableCell>
-                <TableCell align="center">Email</TableCell>
-                <TableCell align="center">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{printUserData()}</TableBody>
-          </Table>
-        </TableContainer>
+        {
+          isLoading ? (
+            <Skeleton variant="rounded" width="100%" height={500} />
+          ) : (
+            <>
+              <Button title="add new user" color="info" onClick={openModalAdd} variant="contained" />
+              <TableContainer component={Paper} sx={{ my: 2 }}>
+                <Table aria-label="User Table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">#</TableCell>
+                      <TableCell align="center">Username</TableCell>
+                      <TableCell align="center">Email</TableCell>
+                      <TableCell align="center">Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{printUserData()}</TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          )
+        }
+
+
       </Container>
 
       <ModalForm modalAdd={modalAdd} closeModalAdd={closeModalAdd} />

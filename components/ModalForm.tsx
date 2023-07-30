@@ -1,4 +1,4 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormHelperText } from "@mui/material";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import * as yup from "yup";
@@ -26,6 +26,11 @@ const ModalForm: React.FC<ModalFormProps> = (props) => {
     router.replace(router.asPath);
   };
 
+  const btnCancelUser = () => {
+    formik.resetForm();
+    props.closeModalAdd();
+  }
+
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -35,10 +40,10 @@ const ModalForm: React.FC<ModalFormProps> = (props) => {
     },
     onSubmit: btnSaveUser,
     validationSchema: yup.object().shape({
-      username: yup.string().min(3),
-      email: yup.string().email(),
-      phone: yup.string().matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, "phone must be a valid phone").min(8),
-      address: yup.string().min(6)
+      username: yup.string().required().min(3),
+      email: yup.string().required().email(),
+      phone: yup.string().required().matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, "phone must be a valid phone").min(8),
+      address: yup.string().required().min(6)
     })
   })
 
@@ -59,10 +64,14 @@ const ModalForm: React.FC<ModalFormProps> = (props) => {
           variant="standard"
           name="username"
           onBlur={formik.handleBlur}
-          error={Boolean(formik.errors.username) && formik.touched.username}
-          helperText={formik.errors.username}
+          error={Boolean(formik.errors.username)}
           required
         />
+        {
+          formik.errors.username && formik.touched.username ? (
+            <FormHelperText>{formik.errors.username}</FormHelperText>
+          ) : null
+        }
         <TextField
           onChange={handleForm}
           margin="dense"
@@ -72,10 +81,14 @@ const ModalForm: React.FC<ModalFormProps> = (props) => {
           variant="standard"
           name="email"
           onBlur={formik.handleBlur}
-          error={Boolean(formik.errors.email) && formik.touched.email}
-          helperText={formik.errors.email}
+          error={Boolean(formik.errors.email)}
           required
         />
+        {
+          formik.errors.email && formik.touched.email ? (
+            <FormHelperText>{formik.errors.email}</FormHelperText>
+          ) : null
+        }
         <TextField
           onChange={handleForm}
           margin="dense"
@@ -85,10 +98,14 @@ const ModalForm: React.FC<ModalFormProps> = (props) => {
           variant="standard"
           name="phone"
           onBlur={formik.handleBlur}
-          error={Boolean(formik.errors.phone) && formik.touched.phone}
-          helperText={formik.errors.phone}
+          error={Boolean(formik.errors.phone)}
           required
         />
+        {
+          formik.errors.phone && formik.touched.phone ? (
+            <FormHelperText>{formik.errors.phone}</FormHelperText>
+          ) : null
+        }
         <TextField
           onChange={handleForm}
           margin="dense"
@@ -100,13 +117,17 @@ const ModalForm: React.FC<ModalFormProps> = (props) => {
           variant="outlined"
           name="address"
           onBlur={formik.handleBlur}
-          error={Boolean(formik.errors.address) && formik.touched.address}
-          helperText={formik.errors.address}
+          error={Boolean(formik.errors.address)}
           required
         />
+        {
+          formik.errors.address && formik.touched.address ? (
+            <FormHelperText>{formik.errors.address}</FormHelperText>
+          ) : null
+        }
       </DialogContent>
       <DialogActions>
-        <Button variant="text" onClick={props.closeModalAdd} title="Close" color="error" type="button" />
+        <Button variant="text" onClick={btnCancelUser} title="Close" color="warning" type="button" />
         <Button variant="text" onClick={formik.handleSubmit} title="Save" type="submit" />
       </DialogActions>
     </Dialog>
